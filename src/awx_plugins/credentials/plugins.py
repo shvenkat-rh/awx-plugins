@@ -12,6 +12,7 @@ from .injectors import (
     aws as aws_injector,
     azure_rm as azure_rm_injector,
     gce as gce_injector,
+    hcp_terraform as hcp_terraform_injector,
     kubernetes_bearer_token as kubernetes_bearer_token_injector,
     openstack as openstack_injector,
     terraform as terraform_injector,
@@ -970,5 +971,36 @@ terraform = ManagedCredentialType(
             },
         ],
         'required': ['configuration'],
+    },
+)
+
+hcp_terraform = ManagedCredentialType(
+    namespace='hcp_terraform',
+    kind='cloud',
+    name=gettext_noop('Terraform Enterprise/Cloud'),
+    managed=True,
+    custom_injectors=hcp_terraform_injector,
+    inputs={
+        'fields': [
+            {
+                'id': 'hostname',
+                'label': gettext_noop('Hostname'),
+                'type': 'string',
+                'help_text': gettext_noop(
+                    'The hostname of your HCP Terraform instance (e.g., app.terraform.io)',
+                ),
+                'default': 'app.terraform.io',
+            },
+            {
+                'id': 'token',
+                'label': gettext_noop('API Token'),
+                'type': 'string',
+                'secret': True,
+                'help_text': gettext_noop(
+                    'HCP Terraform API Token',
+                ),
+            },
+        ],
+        'required': ['token'],
     },
 )
